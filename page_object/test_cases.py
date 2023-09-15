@@ -11,8 +11,9 @@ class TestCases:
     def delete_test_by_name(self, test_name: str):
         # self.page.locator(f'*css=tr >> text=\"{test_name}\"')
         self.page.get_by_role("row").filter(has_text=test_name).get_by_role('button', name="Delete").last.click()
+        self.page.wait_for_timeout(300)
 
-    # перевірити чи колонки приховані в мобільнову девайсі. Повертати True, якщо всі вони скриті
+    # table columns are hidden in the mobile device. Return True if all are hidden
     def check_columns_hidden(self):
         description = self.page.is_hidden('.thDes')
         author = self.page.is_hidden('.thAuthor')
