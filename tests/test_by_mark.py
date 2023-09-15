@@ -23,6 +23,7 @@ def test_tc_does_not_exist(desktop_app_auth):
     assert not desktop_app_auth.test_cases.check_test_exists('sdfsdsfgfsfdv')
 
 
+
 def test_delete_test_case(desktop_app_auth, get_web_service):
     test_name = 'test for delete'
     get_web_service.create_test(test_name, 'delete me pls')

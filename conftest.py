@@ -9,12 +9,8 @@ from page_object.application import App
 from settings import *
 
 
-# autouse - до тесту потрібно виконати певні дії,
-# інформацію про які не потрібно передавати в сам тест
-# якщо хочемо, щоб fixture виконувалася після кожного тесту, тоді score='function'
-# це якщо інші фікстури мають вищий score
 @fixture(autouse=True, scope="session")
-def precondition():
+def condition():
     # виконається перед усіма тестами
     logging.info("precondition")
     yield
@@ -107,7 +103,7 @@ def pytest_addoption(parser):
     parser.addini('headless', help="run browser in headless mode", default='True')
 
 
-# функція дозволяє шукати файл де б не запускався проект
+# the function allows you to search for a file wherever the project is launched
 def load_config(file):
     config_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), file)
     with open(config_file) as cfg:
