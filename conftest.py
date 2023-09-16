@@ -5,8 +5,11 @@ import json
 import pytest
 from pytest import fixture
 from playwright.sync_api import sync_playwright
+
+from helpers.web_service import WebService
 from page_object.application import App
 from settings import *
+from helpers.db import DataBase
 
 
 @fixture(autouse=True, scope="session")
@@ -22,6 +25,25 @@ def condition():
 def get_playwright():
     with sync_playwright() as playwright:
         yield playwright
+
+
+@fixture(scope='session')
+def get_web_service(request):
+    base_url = request.config.getini('base_url')
+    secure = request.config.getoption('--secure')
+    config = load_config(secure)
+    web = WebService(base_url)
+    web.login(**config)
+    yield web
+    web.close()
+
+
+@fixture(scope='session')
+def get_db(request):
+    path = request.config.getini('db_path')
+    db = DataBase(path)
+    yield db
+    db.close()
 
 
 @fixture(scope='session', params=['chromium'])
@@ -100,6 +122,8 @@ def pytest_addoption(parser):
     parser.addoption('--browser', action='store', default='chromium')
     parser.addoption('--secure', action='store', default='secure.json')
     parser.addini('base_url', help="base URL of the site under test", default='http://127.0.0.1:8000')
+    parser.addini('db_path', help="path to sqlite db file",
+                  default='/Users/Ingrida/Documents/Study/Automation/TestMe-TCM/db.sqlite3')
     parser.addini('headless', help="run browser in headless mode", default='True')
 
 
