@@ -1,9 +1,9 @@
 import logging
 import os
 import json
-
+import allure
 import pytest
-from pytest import fixture
+from pytest import fixture, hookimpl
 from playwright.sync_api import sync_playwright
 
 from helpers.web_service import WebService
@@ -128,10 +128,27 @@ def mobile_app_auth(mobile_app, request):
     yield app
 
 
+@hookimpl(tryfirst=True, hookwrapper=True)
+def pytest_runtest_makereport(item, call):
+    outcome = yield
+    result = outcome.get_result()
+    # result.when == 'setup' => 'call' => 'teardown'
+    setattr(item, f'result_{result.when}', result)
+
+
+@fixture(scope='function', autouse=True)
+def make_screenshot(request):
+    yield
+    if request.node.result_call.failed:
+        for arg in request.node.funcargs.values():
+            if isinstance(arg, App):
+                allure.attach(body=arg.page.screenshot(),
+                              name='screenshot',
+                              attachment_type=allure.attachment_type.PNG)
+
+
 def pytest_addoption(parser):
     parser.addoption('--base_url', action='store', default='http://127.0.0.1:8000')
-    parser.addoption('--device', action='store', default='')
-    parser.addoption('--browser', action='store', default='chromium')
     parser.addoption('--secure', action='store', default='secure.json')
     parser.addini('base_url', help="base URL of the site under test", default='http://127.0.0.1:8000')
     parser.addini('db_path', help="path to sqlite db file",
