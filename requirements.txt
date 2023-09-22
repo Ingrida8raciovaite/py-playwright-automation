@@ -1,2 +1,3 @@
 pytes==7.4.0
 playwright==1.36.0
+allure-pytest==2.13.2
