@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites><testsuite name="pytest" errors="0" failures="6" skipped="0" tests="20" time="77.738" timestamp="2023-09-17T11:53:07.834011" hostname="Danylos-MacBook-Pro-3.local"><testcase classname="tests.test_by_mark" name="test_testcase[chromium-general test]" time="3.773" /><testcase classname="tests.test_by_mark" name="test_testcase[chromium-test with no description]" time="0.537" /><testcase classname="tests.test_by_mark" name="test_testcase[chromium-test with digits in name]" time="0.515" /><testcase classname="tests.test_by_mark" name="test_tc_does_not_exist[chromium]" time="0.073" /><testcase classname="tests.test_by_mark" name="test_delete_test_case[chromium]" time="0.513" /><testcase classname="tests.test_by_mark" name="test_delete_test_case_via_db[chromium-general test]" time="0.169" /><testcase classname="tests.test_by_mark" name="test_delete_test_case_via_db[chromium-test with no description]" time="0.176" /><testcase classname="tests.test_by_mark" name="test_delete_test_case_via_db[chromium-test with digits in name]" time="0.195" /><testcase classname="tests.test_dashboard" name="test_dashboard_data[chromium]" time="30.398"><failure message="playwright._impl._api_types.TimeoutError: Timeout 30000ms exceeded.&#10;=========================== logs ===========================&#10;waiting for locator(&quot;input&quot;)&#10;  locator resolved to 3 elements. Proceeding with the first one: &lt;input type=&quot;file&quot; class=&quot;fileUpload&quot; onchange=&quot;upload(…/&gt;&#10;attempting click action&#10;  waiting for element to be visible, enabled and stable&#10;    element is not visible - waiting...&#10;============================================================">desktop_app_auth = &lt;page_object.application.App object at 0x102410750&gt;
+
+    def test_dashboard_data(desktop_app_auth):
+        # change to string
+        payload = json.dumps({"total": 0, "passed": 0, "failed": 0, "norun": 0})
+        desktop_app_auth.intercept_requests('**/getstat*', payload)
+&gt;       desktop_app_auth.refresh_dashboard()
+
+tests/test_dashboard.py:8: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+page_object/application.py:77: in refresh_dashboard
+    self.page.click('input')
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/sync_api/_generated.py:10165: in click
+    self._sync(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_page.py:697: in click
+    return await self._main_frame.click(**locals_to_params(locals()))
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_frame.py:489: in click
+    await self._channel.send("click", locals_to_params(locals()))
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_connection.py:61: in send
+    return await self._connection.wrap_api_call(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_connection.py:482: in wrap_api_call
+    return await cb()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;playwright._impl._connection.Channel object at 0x102846450&gt;, method = 'click', params = {'selector': 'input'}, return_as_dict = False
+
+    async def inner_send(
+        self, method: str, params: Optional[Dict], return_as_dict: bool
+    ) -&gt; Any:
+        if params is None:
+            params = {}
+        callback = self._connection._send_message_to_server(self._guid, method, params)
+        if self._connection._error:
+            error = self._connection._error
+            self._connection._error = None
+            raise error
+        done, _ = await asyncio.wait(
+            {
+                self._connection._transport.on_error_future,
+                callback.future,
+            },
+            return_when=asyncio.FIRST_COMPLETED,
+        )
+        if not callback.future.done():
+            callback.future.cancel()
+&gt;       result = next(iter(done)).result()
+E       playwright._impl._api_types.TimeoutError: Timeout 30000ms exceeded.
+E       =========================== logs ===========================
+E       waiting for locator("input")
+E         locator resolved to 3 elements. Proceeding with the first one: &lt;input type="file" class="fileUpload" onchange="upload(…/&gt;
+E       attempting click action
+E         waiting for element to be visible, enabled and stable
+E           element is not visible - waiting...
+E       ============================================================
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_connection.py:97: TimeoutError</failure></testcase><testcase classname="tests.test_dashboard" name="test_multiple_roles[chromium]" time="30.765"><failure message="playwright._impl._api_types.TimeoutError: Timeout 30000ms exceeded.&#10;=========================== logs ===========================&#10;waiting for locator(&quot;input&quot;)&#10;  locator resolved to 3 elements. Proceeding with the first one: &lt;input type=&quot;file&quot; class=&quot;fileUpload&quot; onchange=&quot;upload(…/&gt;&#10;attempting click action&#10;  waiting for element to be visible, enabled and stable&#10;    element is not visible - waiting...&#10;============================================================">desktop_app_auth = &lt;page_object.application.App object at 0x102410750&gt;, desktop_app_bob = &lt;page_object.application.App object at 0x102fbf210&gt;
+get_db = &lt;helpers.db.DataBase object at 0x102d00e50&gt;
+
+    def test_multiple_roles(desktop_app_auth, desktop_app_bob, get_db):
+        alice = desktop_app_auth
+        bob = desktop_app_bob
+&gt;       alice.refresh_dashboard()
+
+tests/test_dashboard.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+page_object/application.py:77: in refresh_dashboard
+    self.page.click('input')
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/sync_api/_generated.py:10165: in click
+    self._sync(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_page.py:697: in click
+    return await self._main_frame.click(**locals_to_params(locals()))
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_frame.py:489: in click
+    await self._channel.send("click", locals_to_params(locals()))
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_connection.py:61: in send
+    return await self._connection.wrap_api_call(
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_connection.py:482: in wrap_api_call
+    return await cb()
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = &lt;playwright._impl._connection.Channel object at 0x102846450&gt;, method = 'click', params = {'selector': 'input'}, return_as_dict = False
+
+    async def inner_send(
+        self, method: str, params: Optional[Dict], return_as_dict: bool
+    ) -&gt; Any:
+        if params is None:
+            params = {}
+        callback = self._connection._send_message_to_server(self._guid, method, params)
+        if self._connection._error:
+            error = self._connection._error
+            self._connection._error = None
+            raise error
+        done, _ = await asyncio.wait(
+            {
+                self._connection._transport.on_error_future,
+                callback.future,
+            },
+            return_when=asyncio.FIRST_COMPLETED,
+        )
+        if not callback.future.done():
+            callback.future.cancel()
+&gt;       result = next(iter(done)).result()
+E       playwright._impl._api_types.TimeoutError: Timeout 30000ms exceeded.
+E       =========================== logs ===========================
+E       waiting for locator("input")
+E         locator resolved to 3 elements. Proceeding with the first one: &lt;input type="file" class="fileUpload" onchange="upload(…/&gt;
+E       attempting click action
+E         waiting for element to be visible, enabled and stable
+E           element is not visible - waiting...
+E       ============================================================
+
+/Library/Frameworks/Python.framework/Versions/3.11/lib/python3.11/site-packages/playwright/_impl/_connection.py:97: TimeoutError</failure></testcase><testcase classname="tests.test_demo" name="test_wait_more_30_sec[chromium]" time="3.458" /><testcase classname="tests.test_demo" name="test_ajax[chromium]" time="2.808" /><testcase classname="tests.test_demo" name="test_handlers[chromium]" time="0.567"><failure message="AssertionError: assert False&#10; +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('Check new test')&#10; +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists&#10; +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases">desktop_app_auth = &lt;page_object.application.App object at 0x102410750&gt;
+
+    def test_handlers(desktop_app_auth):
+        desktop_app_auth.navigate_to('Demo pages')
+        desktop_app_auth.demo_pages.click_new_page_button()
+        desktop_app_auth.demo_pages.inject_js()
+        desktop_app_auth.navigate_to('Test Cases')
+&gt;       assert desktop_app_auth.test_cases.check_test_exists('Check new test')
+E       AssertionError: assert False
+E        +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('Check new test')
+E        +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists
+E        +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases
+
+tests/test_demo.py:24: AssertionError</failure></testcase><testcase classname="tests.test_location" name="test_location_ok[iPhone 12 Pro-chromium]" time="0.737" /><testcase classname="tests.test_mobile" name="test_columns_hidden[iPhone 12 Pro-chromium]" time="0.126" /><testcase classname="tests.test_location" name="test_location_ok[Pixel 2-chromium]" time="0.784" /><testcase classname="tests.test_mobile" name="test_columns_hidden[Pixel 2-chromium]" time="0.125" /><testcase classname="tests.test_tc.TestMyClass" name="test_testcase[chromium]" time="0.539"><failure message="AssertionError: assert False&#10; +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('hello')&#10; +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists&#10; +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases">self = &lt;test_tc.TestMyClass object at 0x102399050&gt;, desktop_app_auth = &lt;page_object.application.App object at 0x102410750&gt;
+
+    def test_testcase(self, desktop_app_auth):
+        test_name = 'hello'
+        desktop_app_auth.navigate_to('Create new test')
+        desktop_app_auth.create_test(test_name, 'world')
+        desktop_app_auth.navigate_to('Test Cases')
+&gt;       assert desktop_app_auth.test_cases.check_test_exists(test_name)
+E       AssertionError: assert False
+E        +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('hello')
+E        +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists
+E        +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases
+
+tests/test_tc.py:11: AssertionError</failure></testcase><testcase classname="tests.test_tc.TestMyClass" name="test_testcase_no_description[chromium]" time="0.546"><failure message="AssertionError: assert False&#10; +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('hello')&#10; +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists&#10; +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases">self = &lt;test_tc.TestMyClass object at 0x102399b90&gt;, desktop_app_auth = &lt;page_object.application.App object at 0x102410750&gt;
+
+    def test_testcase_no_description(self, desktop_app_auth):
+        test_name = 'hello'
+        desktop_app_auth.navigate_to('Create new test')
+        desktop_app_auth.create_test(test_name, '')
+        desktop_app_auth.navigate_to('Test Cases')
+&gt;       assert desktop_app_auth.test_cases.check_test_exists(test_name)
+E       AssertionError: assert False
+E        +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('hello')
+E        +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists
+E        +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases
+
+tests/test_tc.py:19: AssertionError</failure></testcase><testcase classname="tests.test_tc.TestMyClass" name="test_testcase_digits_name[chromium]" time="0.700"><failure message="AssertionError: assert False&#10; +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('123')&#10; +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists&#10; +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases">self = &lt;test_tc.TestMyClass object at 0x1023a9110&gt;, desktop_app_auth = &lt;page_object.application.App object at 0x102410750&gt;
+
+    def test_testcase_digits_name(self, desktop_app_auth):
+        test_name = '123'
+        desktop_app_auth.navigate_to('Create new test')
+        desktop_app_auth.create_test(test_name, 'world')
+        desktop_app_auth.navigate_to('Test Cases')
+&gt;       assert desktop_app_auth.test_cases.check_test_exists(test_name)
+E       AssertionError: assert False
+E        +  where False = &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt;('123')
+E        +    where &lt;bound method TestCases.check_test_exists of &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;&gt; = &lt;page_object.test_cases.TestCases object at 0x102337e10&gt;.check_test_exists
+E        +      where &lt;page_object.test_cases.TestCases object at 0x102337e10&gt; = &lt;page_object.application.App object at 0x102410750&gt;.test_cases
+
+tests/test_tc.py:27: AssertionError</failure></testcase></testsuite></testsuites>
